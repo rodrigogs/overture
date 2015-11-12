@@ -29,7 +29,7 @@ module.exports = class Gateway {
     ping(callback) {
         const r = request.defaults({'proxy': this.getUrl()});
         
-        r.get('http://www.google.com', {timeout: 5000}, (error, response) => {
+        r.get('http://www.google.com', {timeout: 10000}, (error, response) => {
             callback(!error && response.statusCode === 200);
         });
     }

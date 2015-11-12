@@ -7,11 +7,18 @@
   "author": {
     "name": "Rodrigo Gomes da Silva",
     "email": "rodrigo.smscom@gmail.com",
-    "web": ""
+    "web": "https://github.com/rodrigogs/overture"
   },
   "main": "index.js",
   "scripts": {},
-  "keywords": [],
+  "keywords": [
+    "crawler",
+    "proxy",
+    "web",
+    "cheat",
+    "spider",
+    "hidemyass"
+  ],
   "devDependencies": {},
   "dependencies": {
     "async": "^1.5.0",
