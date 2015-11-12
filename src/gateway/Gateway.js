@@ -5,7 +5,7 @@ const request = require('request');
 
 module.exports = class Gateway {
     constructor(ip, port, protocol, anonymity, country, region, city, uptime) {
-        const args = ip || {};
+        let args = ip || {};
         
         this.ip = args.ip || ip;
         this.port = args.port || port;
@@ -27,7 +27,7 @@ module.exports = class Gateway {
     }
     
     ping(callback) {
-        const r = request.defaults({'proxy': this.getUrl()});
+        let r = request.defaults({'proxy': this.getUrl()});
         
         r.get('http://www.google.com', {timeout: 10000}, (error, response) => {
             callback(!error && response.statusCode === 200);

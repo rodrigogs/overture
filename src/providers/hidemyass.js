@@ -3,14 +3,15 @@
 const phantom = require('phantom');
 const Gateway = require('../gateway/Gateway');
 
-const _url = 'http://proxylist.hidemyass.com/search-1292985#listable';
+const URL = 'http://proxylist.hidemyass.com/search-1292985#listable';
 
 module.exports = {
     crawl: (callback) => {
         phantom.create(ph => {
             ph.createPage(page => {
-                page.open(_url, function(status) {
-                    console.log(`Opened page ${_url} with status ${status}`);
+                page.open(URL, function(status) {
+                    console.log(`Opened page ${URL} with status ${status}`);
+                    
                     page.evaluate(
                         /* It runs on the virtual browser */
                         function() {
@@ -56,7 +57,7 @@ module.exports = {
                             gateways = gateways
                                 .filter((n) => { return !!n })
                                 .map((gtw) => {
-                                    let g = new Gateway(gtw)
+                                    let g = new Gateway(gtw);
                                     g.provider = 'HideMyAss';
                                     return g;
                                 });
