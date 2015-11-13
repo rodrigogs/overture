@@ -73,17 +73,17 @@ const _start = (interval, callback) => {
     }
     
     const verify = () => {
-        let gatewayLists = [];
+        let gatewaysList = [];
         async.parallel([
             cb => {
                 FreeProxyLists.crawl(gateways => {
-                    gatewayLists.push(gateways);
+                    gatewaysList.push.apply(gatewaysList, gateways);
                     cb();
                 });
             },
             cb => {
                 HideMyAss.crawl(gateways => {
-                    gatewayLists.push(gateways);
+                    gatewaysList.push.apply(gatewaysList, gateways);
                     cb();
                 });
             }
@@ -91,10 +91,6 @@ const _start = (interval, callback) => {
             if (err) {
                 return console.log(err);
             }
-            
-            let gatewaysList = gatewayLists.reduce(function(a, b) {
-                return a.concat(b);
-            }, []);
             
             _healthCheck(gatewaysList, callback);
         });
