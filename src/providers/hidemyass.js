@@ -74,8 +74,6 @@ module.exports = {
                     );
                 });
             });
-        }, {
-            dnodeOpts: {weak: false}
         });
     }
 };
