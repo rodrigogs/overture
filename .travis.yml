@@ -4,6 +4,5 @@ node_js:
   - 5.0.0
 install:
   - npm install
-  - npm install ava -g
 script:
   - npm test
