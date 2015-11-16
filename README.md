@@ -7,6 +7,8 @@
                                              
                                              
 
+[![Build Status](https://travis-ci.org/rodrigogs/overture.svg?branch=master)](https://travis-ci.org/rodrigogs/overture)
+
 ## A proxy crawler!
 
 This is a work in progress. Be patient, it is still crawling...
