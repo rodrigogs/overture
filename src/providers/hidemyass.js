@@ -6,7 +6,7 @@ const Gateway = require('../gateway/Gateway');
 const URL = 'http://proxylist.hidemyass.com/search-1292985#listable';
 
 module.exports = {
-    crawl: (callback) => {
+    crawl: callback => {
         phantom.create(ph => {
             ph.createPage(page => {
                 page.open(URL, status => {
@@ -53,13 +53,13 @@ module.exports = {
                             return gtws;
                         }
                         /* XXX */
-                        , (gateways) => {
+                        , gateways => {
                             gateways = gateways
                                 .filter(n => {
                                     return !!n
                                         && !!n.hostname
                                         && !!n.port
-                                        && !!n.protocol
+                                        && !!n.protocol;
                                 })
                                 .map(gtw => {
                                     let g = new Gateway(gtw);

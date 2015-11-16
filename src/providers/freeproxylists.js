@@ -7,11 +7,22 @@ const Gateway = require('../gateway/Gateway');
 const URL = 'http://www.freeproxylists.net/';
 
 module.exports = {
-    crawl: (callback) => {
+    crawl: callback => {
         phantom.create(ph => {
             ph.createPage(page => {
                 page.open(URL, status => {
                     console.log(`Opened page ${URL} with ${status}`);
+                    
+                    page.evaluate(function () {
+                        var el = document.querySelector('body');
+                        return (el.innerText.indexOf('403 Forbidden') > -1);
+                    }, isForbidden => {
+                        if (isForbidden) {
+                            console.log('This ip is blacklisted for freeproxylists.net');
+                            callback([]);
+                            return ph.exit();
+                        }
+                    });
                     
                     page.includeJs('https://code.jquery.com/jquery-2.1.4.min.js', () => {
                         page.evaluate(
@@ -64,13 +75,13 @@ module.exports = {
                                 return gtws;
                             }
                             /* XXX */
-                            , (gateways) => {
+                            , gateways => {
                                 gateways = gateways
                                     .filter(n => {
                                         return !!n
                                             && !!n.hostname
                                             && !!n.port
-                                            && !!n.protocol
+                                            && !!n.protocol;
                                     })
                                     .map(gtw => {
                                         let g = new Gateway(gtw);
