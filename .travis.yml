@@ -3,7 +3,6 @@ node_js:
   - 4.2.2
   - 5.0.0
 install:
-  - npm install
-  - npm install ava -g
+  - npm install npm -g && npm install
 script:
   - npm test
