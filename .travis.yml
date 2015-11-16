@@ -5,10 +5,10 @@ node_js:
 python:
   - 3.5
 install:
-  - sudo add-apt-repository ppa:fkrull/deadsnakes
-  - sudo apt-get update
-  - sudo apt-get install python2.7
-  - sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.6 20
+  - sudo add-apt-repository ppa:fkrull/deadsnakes -y
+  - sudo apt-get update -y
+  - sudo apt-get install python2.7 -y
+  - sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.6 20 -y
   - npm install npm -g
   - npm install
 sudo: required
