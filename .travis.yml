@@ -3,7 +3,9 @@ node_js:
   - 4.2.2
   - 5.0.0
 install:
+  - sudo apt-get install -qq gcc-4.7 g++-4.7
   - npm install npm -g
   - npm install
+sudo: required
 script:
   - npm test
