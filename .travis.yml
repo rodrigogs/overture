@@ -11,5 +11,6 @@ install:
   - sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.6 20
   - npm install npm -g
   - npm install
+sudo: required
 script:
   - npm test
