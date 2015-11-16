@@ -22,7 +22,8 @@
     "hidemyass"
   ],
   "devDependencies": {
-    "ava": "^0.4.2"
+    "ava": "^0.4.2",
+    "phantomjs": "^1.9.18"
   },
   "dependencies": {
     "async": "^1.5.0",
