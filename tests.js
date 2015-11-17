@@ -4,6 +4,18 @@ import HideMyAss from './src/providers/hidemyass';
 import FreeProxyLists from './src/providers/freeproxylists';
 import Gateway from './src/gateway/Gateway';
 
+let overture = null;
+
+test.beforeEach(t => {
+    overture = new Overture();
+    t.end();
+});
+
+test.afterEach(t => {
+    overture.stop();
+    t.end();
+});
+
 test('crawl the proxy list from HideMyAss', t => {
     HideMyAss.crawl(gateways => {
         t.true((gateways instanceof Array) && (gateways.length > 0), 'Return should be an array');
@@ -19,8 +31,6 @@ test('crawl the proxy list from FreeProxyLists', t => {
 });
 
 test('start Overture service and receive a proxy list', t => {
-    let overture = new Overture();
-    
     overture.start(null, gateways => {
         if (gateways) {
             t.true((gateways instanceof Array) && (gateways.length > 0), 'Return should be an array');
@@ -36,8 +46,6 @@ test('start Overture service and receive a proxy list', t => {
 });
 
 test('start Overture service and receive a healthy proxy', t => {
-    let overture = new Overture();
-    
     overture.findHealthyGateway(null, gateway => {
         if (gateway) {
             t.true((gateway instanceof Gateway), 'Return should be a Gateway');
@@ -54,8 +62,6 @@ test('start Overture service and receive a healthy proxy', t => {
 });
 
 test('list the healthy proxies found', t => {
-    let overture = new Overture();
-    
     overture.start(null, gateways => {
         if (gateways) {
             let list = overture.list();
