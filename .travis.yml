@@ -6,6 +6,5 @@ install:
   - npm install npm -g
   - npm install phantom -g
   - npm install
-sudo: required
 script:
   - npm test
