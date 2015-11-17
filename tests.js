@@ -6,12 +6,12 @@ import Gateway from './src/gateway/Gateway';
 
 let overture = null;
 
-test.beforeEach(t => {
+test.beforeEach('reinstantiate overture', t => {
     overture = new Overture();
     t.end();
 });
 
-test.afterEach(t => {
+test.afterEach('stop overture', t => {
     overture.stop();
     t.end();
 });
