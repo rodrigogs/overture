@@ -1,7 +1,6 @@
 'use strict';
 
 const phantom = require('phantom');
-const utils = require('../utils/utils');
 const Gateway = require('../gateway/Gateway');
 
 const URL = 'http://www.freeproxylists.net/';

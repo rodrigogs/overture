@@ -95,7 +95,7 @@ module.exports = class Overture {
     list() {
         for (let i = 0, len = this._healthyGateways.length; i < len; i++) {
             let gtw = this._healthyGateways[i];
-            console.log(`${i}: ${gtw.getUrl()}`);
+            console.log(`${i}: ${gtw.provider}: ${gtw.getUrl()}`);
         }
     
         return this._healthyGateways;
@@ -152,7 +152,7 @@ module.exports = class Overture {
         }
         clearInterval(this._interval);
         this._running = false;
-        console.log('Service stoped');
+        console.log('Service stopped');
     }
     
     /**
