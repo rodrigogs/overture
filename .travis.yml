@@ -4,7 +4,7 @@ node_js:
   - 5.0.0
 install:
   - npm install npm -g
-  - npm install phantom -g
+  - npm install phantomjs -g
   - npm install
 script:
   - npm test
