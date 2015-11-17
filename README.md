@@ -16,7 +16,7 @@ Overture is a proxy crawler capable of read multiple free proxy list websites an
 > npm install overture
 
 ## Usage
-```
+```javascript
 const Overture = require('overture');
 
 let overture = new Overture();
