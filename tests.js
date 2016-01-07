@@ -1,3 +1,5 @@
+'use strict';
+
 import test from 'ava';
 import Overture from './index.js';
 import HideMyAss from './src/providers/hidemyass';
@@ -37,39 +39,40 @@ test('start Overture service and receive a proxy list', t => {
         } else {
             t.fail('No proxy list was received');
         }
-        
+
         overture.stop();
         t.false(overture.isRunning(), 'Service should be stopped at this point');
-        
+
         t.end();
     });
 });
 
 test('start Overture service and receive a healthy proxy', t => {
     overture.findHealthyGateway(null, gateway => {
-        if (gateway) {
-            t.true((gateway instanceof Gateway), 'Return should be a Gateway');
-            
-            gateway.ping(success => {
-                t.true((gateway instanceof Gateway), 'Returned proxy is not healthy');
-                t.end();
-            });
-        } else {
-            t.fail('No proxy was received');
-            t.end();
+        if (!gateway) {
+        	t.fail('No proxy was received');
+        	t.end();
+            return;
         }
+
+        t.true((gateway instanceof Gateway), 'Return should be a Gateway');
+        gateway.ping(success => {
+            t.true((gateway instanceof Gateway), 'Returned proxy is not healthy');
+            t.end();
+        });
     });
 });
 
 test('list the healthy proxies found', t => {
     overture.start(null, gateways => {
-        if (gateways) {
-            let list = overture.list();
-            t.true(list instanceof Array && list.length > 0);
-            t.end();
-        } else {
-            t.fail('No proxy list was received');
-            t.end();
+        if (!gateways) {
+        	t.fail('No proxy list was received');
+        	t.end();
+            return;
         }
+
+        let list = overture.list();
+        t.true(list instanceof Array && list.length > 0);
+        t.end();
     });
 });
