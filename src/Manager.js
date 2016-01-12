@@ -7,6 +7,11 @@ const HideMyAss = require('hidemyass-scrapper');
 const FreeProxyLists = require('freeproxylists-scrapper');
 const Gateway = require('./Gateway');
 
+const STATUS = {
+    READY: 'ready',
+    HALT: 'halt'
+};
+
 module.exports = class Manager {
 
     /**
@@ -14,9 +19,13 @@ module.exports = class Manager {
      * @param {string|object} logConfig Log level as string or a winston logger config as an object
      */
     constructor(logConfig) {
-        this._interval = null,
-        this._isRunning = false,
+        this._interval = null;
+        this._statusInterval = null;
+        this._status = undefined;
+        this._isRunning = false;
         this._hatchery = require('./Hatchery');
+        this.events = new (require('events'))();
+
         this._logger = new winston.Logger();
         if (typeof logConfig === 'string') {
             this._logger.configure({
@@ -46,6 +55,17 @@ module.exports = class Manager {
             });
         }, Kairos.with().setMinutes(interval || 1).toMilliseconds());
 
+        this._statusInterval = setInterval(() => {
+            let list = this.pickAll();
+            if (list && (list.length > 0) && (!this._status || (this._status === STATUS.HALT))) {
+                this._status = STATUS.READY;
+                this.events.emit(STATUS.READY, list);
+            } else if (this._status === STATUS.READY) {
+                this._status === STATUS.HALT;
+                this.events.emit(STATUS.HALT);
+            }
+        }, 2000);
+
         this._isRunning = true;
         this._logger.log('debug', 'Service started');
     }
@@ -58,6 +78,7 @@ module.exports = class Manager {
             this._logger.log('info', 'Already stopped');
         }
         clearInterval(this._interval);
+        clearInterval(this._statusInterval);
         this._running = false;
         this._logger.log('debug', 'Service stopped');
     }
@@ -103,11 +124,18 @@ module.exports = class Manager {
     /**
      * 
      */
-    pick() {
+    pickBest() {
         if (!this.isRunning) {
             return null;
         }
         return this._hatchery.pick();
+    }
+
+    pickAll() {
+        if (!this.isRunning) {
+            return null;
+        }
+        return this._hatchery.list();
     }
 
     /**

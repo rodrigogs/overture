@@ -1,0 +1,103 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/home/ubuntu/.nvm/versions/node/v4.2.1/bin/node',
+1 verbose cli   '/home/ubuntu/.nvm/versions/node/v4.2.1/bin/npm',
+1 verbose cli   'publish' ]
+2 info using npm@2.14.7
+3 info using node@v4.2.1
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: '/home/ubuntu/workspace',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /home/ubuntu/.npm/overturejs/0.2.1/package.tgz not in flight; packing
+9 verbose tar pack [ '/home/ubuntu/.npm/overturejs/0.2.1/package.tgz',
+9 verbose tar pack   '/home/ubuntu/workspace' ]
+10 verbose tarball /home/ubuntu/.npm/overturejs/0.2.1/package.tgz
+11 verbose folder /home/ubuntu/workspace
+12 info prepublish overturejs@0.2.1
+13 verbose addLocalTarball adding from inside cache /home/ubuntu/.npm/overturejs/0.2.1/package.tgz
+14 silly cache afterAdd overturejs@0.2.1
+15 verbose afterAdd /home/ubuntu/.npm/overturejs/0.2.1/package/package.json not in flight; writing
+16 verbose afterAdd /home/ubuntu/.npm/overturejs/0.2.1/package/package.json written
+17 silly publish { name: 'overturejs',
+17 silly publish   version: '0.2.1',
+17 silly publish   description: 'A proxy crawler.',
+17 silly publish   license: 'BSD-2-Clause',
+17 silly publish   repository: { type: 'git', url: 'overture' },
+17 silly publish   author:
+17 silly publish    { name: 'Rodrigo Gomes da Silva',
+17 silly publish      email: 'rodrigo.smscom@gmail.com',
+17 silly publish      url: 'https://github.com/rodrigogs/overture' },
+17 silly publish   main: 'index.js',
+17 silly publish   scripts: { test: 'ava tests.js --serial' },
+17 silly publish   keywords: [ 'crawler', 'proxy', 'web', 'cheat', 'spider', 'hidemyass' ],
+17 silly publish   devDependencies: { ava: '^0.9.1', phantomjs: '^1.9.18' },
+17 silly publish   dependencies:
+17 silly publish    { async: '^1.5.2',
+17 silly publish      'freeproxylists-scrapper': '0.3.0',
+17 silly publish      'hidemyass-scrapper': '0.3.1',
+17 silly publish      kairos: '^1.1.0',
+17 silly publish      phantom: '^0.8.3',
+17 silly publish      request: '^2.65.0',
+17 silly publish      winston: '^2.1.1' },
+17 silly publish   readme: '     _____                _                  \n    |  _  |              | |                 \n    | | | |_   _____ _ __| |_ _   _ _ __ ___ \n    | | | \\ \\ / / _ \\ \'__| __| | | | \'__/ _ \\\n    \\ \\_/ /\\ V /  __/ |  | |_| |_| | | |  __/\n     \\___/  \\_/ \\___|_|   \\__|\\__,_|_|  \\___|\n                                             \n                                             \n\n[![Build Status](https://travis-ci.org/rodrigogs/overture.svg?branch=master)](https://travis-ci.org/rodrigogs/overture)\n\n## About\nOverture uses proxy crawlers capable of read free proxy list websites and test the results to leave only the healthy ones.\nYou can think of Overture as a proxy pool service.\n\n## Install\n> npm install overturejs\n\n## Usage\n```javascript\nconst Overture = require(\'overture\');\n\nlet overture = new Overture(\'degub\');\n\noverture.start(intervalInMinutes);\n// Starts an Overture instance that verifies the proxy lists within the given interval.\nlet myProxy = overture.pickBest();\n// Returns a tested healthy proxy server with the smallest latency.\nlet myProxies = overture.pickAll();\n// Returns a list with all healthy gateways.\noverture.stop();\n// Stops the Overture instance.\nlet isRunning = overture.isRunning;\n// Returns true if instance is running and false if it\'s not.\n```\n\n## License\n\n[Licence](https://github.com/rodrigogs/overture/blob/master/LICENSE) © Rodrigo Gomes da Silva\n',
+17 silly publish   readmeFilename: 'README.md',
+17 silly publish   gitHead: '29aea2e2c69a01e17d6e3c0802f3676422912786',
+17 silly publish   _id: 'overturejs@0.2.1',
+17 silly publish   _shasum: '4eb747abd46fba0ab460666dac5de250fefb7323',
+17 silly publish   _from: '.' }
+18 verbose getPublishConfig undefined
+19 silly mapToRegistry name overturejs
+20 silly mapToRegistry using default registry
+21 silly mapToRegistry registry https://registry.npmjs.org/
+22 silly mapToRegistry uri https://registry.npmjs.org/overturejs
+23 verbose publish registryBase https://registry.npmjs.org/
+24 silly publish uploading /home/ubuntu/.npm/overturejs/0.2.1/package.tgz
+25 verbose request uri https://registry.npmjs.org/overturejs
+26 verbose request sending authorization for write operation
+27 info attempt registry request try #1 at 12:29:15 PM
+28 verbose request using bearer token for auth
+29 verbose request id f949b5db701d94c9
+30 http request PUT https://registry.npmjs.org/overturejs
+31 http 403 https://registry.npmjs.org/overturejs
+32 verbose headers { 'content-type': 'application/json',
+32 verbose headers   'cache-control': 'max-age=300',
+32 verbose headers   'content-length': '95',
+32 verbose headers   'accept-ranges': 'bytes',
+32 verbose headers   date: 'Tue, 12 Jan 2016 12:29:16 GMT',
+32 verbose headers   via: '1.1 varnish',
+32 verbose headers   connection: 'keep-alive',
+32 verbose headers   'x-served-by': 'cache-ord1735-ORD',
+32 verbose headers   'x-cache': 'MISS',
+32 verbose headers   'x-cache-hits': '0',
+32 verbose headers   'x-timer': 'S1452601755.841976,VS0,VE1025' }
+33 verbose request invalidating /home/ubuntu/.npm/registry.npmjs.org/overturejs on PUT
+34 error publish Failed PUT 403
+35 verbose stack Error: "You cannot publish over the previously published version 0.2.1." : overturejs
+35 verbose stack     at makeError (/home/ubuntu/.nvm/versions/node/v4.2.1/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+35 verbose stack     at CachingRegistryClient.<anonymous> (/home/ubuntu/.nvm/versions/node/v4.2.1/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:252:14)
+35 verbose stack     at Request._callback (/home/ubuntu/.nvm/versions/node/v4.2.1/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+35 verbose stack     at Request.self.callback (/home/ubuntu/.nvm/versions/node/v4.2.1/lib/node_modules/npm/node_modules/request/request.js:198:22)
+35 verbose stack     at emitTwo (events.js:87:13)
+35 verbose stack     at Request.emit (events.js:172:7)
+35 verbose stack     at Request.<anonymous> (/home/ubuntu/.nvm/versions/node/v4.2.1/lib/node_modules/npm/node_modules/request/request.js:1063:14)
+35 verbose stack     at emitOne (events.js:82:20)
+35 verbose stack     at Request.emit (events.js:169:7)
+35 verbose stack     at IncomingMessage.<anonymous> (/home/ubuntu/.nvm/versions/node/v4.2.1/lib/node_modules/npm/node_modules/request/request.js:1009:12)
+36 verbose statusCode 403
+37 verbose pkgid overturejs
+38 verbose cwd /home/ubuntu/workspace
+39 error Linux 4.2.0-c9
+40 error argv "/home/ubuntu/.nvm/versions/node/v4.2.1/bin/node" "/home/ubuntu/.nvm/versions/node/v4.2.1/bin/npm" "publish"
+41 error node v4.2.1
+42 error npm  v2.14.7
+43 error code E403
+44 error "You cannot publish over the previously published version 0.2.1." : overturejs
+45 error If you need help, you may report this error at:
+45 error     <https://github.com/npm/npm/issues>
+46 verbose exit [ 1, true ]
