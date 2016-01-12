@@ -88,10 +88,12 @@ const _pick = () => {
 };
 
 /**
- * 
+ * Returns a list with the healthy gateways.
  */
 const _listGateways = () => {
-    return _list;
+    return _list.filter((gateway) => {
+        return gateway.isHealthy === true;
+    });
 };
 
 module.exports = {
