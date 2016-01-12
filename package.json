@@ -1,6 +1,6 @@
 {
   "name": "overture",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A proxy crawler.",
   "license": "BSD-2-Clause",
   "repository": "overture",
