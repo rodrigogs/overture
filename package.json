@@ -2,7 +2,7 @@
   "name": "overture",
   "version": "0.0.1",
   "description": "A proxy crawler.",
-  "license": "BSD",
+  "license": "BSD-2-Clause",
   "repository": "overture",
   "author": {
     "name": "Rodrigo Gomes da Silva",
@@ -22,13 +22,16 @@
     "hidemyass"
   ],
   "devDependencies": {
-    "ava": "^0.4.2",
+    "ava": "^0.9.1",
     "phantomjs": "^1.9.18"
   },
   "dependencies": {
-    "async": "^1.5.0",
+    "async": "^1.5.2",
+    "freeproxylists-scrapper": "0.3.0",
+    "hidemyass-scrapper": "0.3.1",
+    "kairos": "^1.1.0",
     "phantom": "^0.8.3",
     "request": "^2.65.0",
-    "winston": "^2.1.0"
+    "winston": "^2.1.1"
   }
 }

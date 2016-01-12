@@ -2,6 +2,7 @@
 
 const url = require('url');
 const request = require('request');
+const TEST_URL = 'http://www.example.com';
 
 module.exports = class Gateway {
     constructor(hostname, port, protocol, anonymity, country, region, city, uptime, provider) {
@@ -16,9 +17,14 @@ module.exports = class Gateway {
         this.city = args.city || city;
         this.uptime = args.uptime || uptime;
         this.provider = args.provider || provider;
+        this.attempts = 0;
+        this.isEngaged = false;
+        this.isHealthy = undefined;
+        this.verifiedAt = undefined;
+        this.latency = undefined;
     }
-    
-    getUrl() {
+
+    get url() {
         return url.format({
             protocol: this.protocol,
             slashes: true,
@@ -26,12 +32,15 @@ module.exports = class Gateway {
             port: this.port
         });
     }
-    
+
     ping(callback) {
-        let r = request.defaults({'proxy': this.getUrl()});
-        
-        r.get('http://www.example.com', {timeout: 10000}, (error, response) => {
-            callback(!error && response.statusCode === 200);
+        let r = request.defaults({'proxy': this.url});
+
+        r.get(TEST_URL, {timeout: 10000, time: true}, (error, response) => {
+            if (!error && response.statusCode === 200) {
+                return callback(response.elapsedTime);
+            }
+            callback(false);
         });
     }
 };

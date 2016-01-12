@@ -1,36 +1,21 @@
+'use strict';
+
 import test from 'ava';
 import Overture from './index.js';
-import HideMyAss from './src/providers/hidemyass';
-import FreeProxyLists from './src/providers/freeproxylists';
 import Gateway from './src/gateway/Gateway';
 
 let overture = null;
 
 test.beforeEach('reinstantiate overture', t => {
     overture = new Overture();
-    t.end();
 });
 
 test.afterEach('stop overture', t => {
     overture.stop();
-    t.end();
 });
 
-test('crawl the proxy list from HideMyAss', t => {
-    HideMyAss.crawl(gateways => {
-        t.true((gateways instanceof Array) && (gateways.length > 0), 'Return should be an array');
-        t.end();
-    });
-});
-
-test('crawl the proxy list from FreeProxyLists', t => {
-    FreeProxyLists.crawl(gateways => {
-        t.true((gateways instanceof Array) && (gateways.length > 0), 'Return should be an array');
-        t.end();
-    });
-});
-
-test('start Overture service and receive a proxy list', t => {
+test.cb('start Overture service and receive a proxy list', t => {
+    t.plan(2);
     overture.start(null, gateways => {
         if (gateways) {
             t.true((gateways instanceof Array) && (gateways.length > 0), 'Return should be an array');
@@ -45,7 +30,8 @@ test('start Overture service and receive a proxy list', t => {
     });
 });
 
-test('start Overture service and receive a healthy proxy', t => {
+test.cb('start Overture service and receive a healthy proxy', t => {
+    t.plan(2);
     overture.findHealthyGateway(null, gateway => {
         if (gateway) {
             t.true((gateway instanceof Gateway), 'Return should be a Gateway');
@@ -54,22 +40,25 @@ test('start Overture service and receive a healthy proxy', t => {
                 t.true((gateway instanceof Gateway), 'Returned proxy is not healthy');
                 t.end();
             });
-        } else {
-            t.fail('No proxy was received');
-            t.end();
+            return;
         }
+        
+        t.fail('No proxy was received');
+        t.end();
     });
 });
 
-test('list the healthy proxies found', t => {
+test.cb('list the healthy proxies found', t => {
+    t.plan(1);
     overture.start(null, gateways => {
         if (gateways) {
             let list = overture.list();
-            t.true(list instanceof Array && list.length > 0);
+            t.true(list instanceof Array);
             t.end();
-        } else {
-            t.fail('No proxy list was received');
-            t.end();
+            return;
         }
+        
+        t.fail('No proxy list was received');
+        t.end();
     });
 });
