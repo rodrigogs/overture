@@ -30,7 +30,7 @@ overture.events.on('halt', () => { console.log('Sorry, there is no proxies alive
 // Events
 
 let myProxy = overture.pickBest();
-// Returns a tested healthy proxy server with the smallest latency.
+// Returns a tested healthy proxy server with the lowest latency.
 let myProxies = overture.pickAll();
 // Returns a list with all healthy gateways.
 overture.stop();
