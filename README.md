@@ -20,11 +20,14 @@ You can think of Overture as a proxy pool service.
 ```javascript
 const Overture = require('overture');
 
-let overture = new Overture();
+let overture = new Overture('degub');
+
 overture.start(intervalInMinutes);
 // Starts an Overture instance that verifies the proxy lists within the given interval.
-let myProxy = overture.pick();
+let myProxy = overture.pickBest();
 // Returns a tested healthy proxy server with the smallest latency.
+let myProxies = overture.pickAll();
+// Returns a list with all healthy gateways.
 overture.stop();
 // Stops the Overture instance.
 let isRunning = overture.isRunning;
