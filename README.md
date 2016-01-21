@@ -26,11 +26,11 @@ overture.start(intervalInMinutes);
 // Starts an Overture instance that verifies the proxy lists within the given interval.
 
 overture.events.on('ready', (currentHealthyList) => { console.log(currentHealthyList) } );
-overture.events.on('halt', () => { console.log('Sorry, there is no proxies alive :(') } );
+overture.events.on('halt', () => { console.log('Sorry, there are no proxies alive :(') } );
 // Events
 
 let myProxy = overture.pickBest();
-// Returns a tested healthy proxy server with the smallest latency.
+// Returns a tested healthy proxy server with the lowest latency.
 let myProxies = overture.pickAll();
 // Returns a list with all healthy gateways.
 overture.stop();
