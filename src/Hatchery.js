@@ -31,9 +31,9 @@ const _update = () => {
 /**
  * 
  */
-const _verify = (gateway) => {
+const _verify = gateway => {
     gateway.isEngaged = true;
-    gateway.ping((success) => {
+    gateway.ping(success => {
         if (!success) {
             gateway.isHealthy = false;
             gateway.attempts++;
@@ -52,20 +52,20 @@ const _verify = (gateway) => {
 /**
  * @param {Gateway[]} gateways
  */
-const _incubate = (gateways) => {
+const _incubate = gateways => {
     async.filter(gateways, (gateway, callback) => {
         if (!(gateway instanceof Gateway)) {
             return callback(false);
         }
 
-        const exists = _list.find((element) => {
+        const exists = _list.find(element => {
             return (element.protocol === gateway.protocol)
                 && (element.hostname === gateway.hostname)
                 && (element.port === gateway.port);
         });
 
         callback(!exists);
-    }, (results) => {
+    }, results => {
         _list = _list.concat(results);
         _update();
     });
@@ -75,7 +75,7 @@ const _incubate = (gateways) => {
  * Returns the gateway with the smallest latency
  */
 const _pick = () => {
-    let healthyList = _list.filter((gateway) => {
+    let healthyList = _list.filter(gateway => {
         return gateway.isHealthy === true;
     });
 
@@ -90,14 +90,22 @@ const _pick = () => {
 /**
  * Returns a list with the healthy gateways.
  */
-const _listGateways = () => {
-    return _list.filter((gateway) => {
+const _listHealthy = () => {
+    return _list.filter(gateway => {
         return gateway.isHealthy === true;
     });
+};
+
+/**
+ * Returns a list with the healthy gateways.
+ */
+const _listAll = () => {
+    return _list;
 };
 
 module.exports = {
     incubate: _incubate,
     pick: _pick,
-    list: _listGateways
+    listHealthy: _listHealthy,
+    listAll: _listAll
 };

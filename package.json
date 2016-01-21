@@ -22,13 +22,13 @@
     "hidemyass"
   ],
   "devDependencies": {
-    "ava": "^0.9.1",
+    "ava": "^0.10.0",
     "phantomjs": "^1.9.18"
   },
   "dependencies": {
     "async": "^1.5.2",
-    "freeproxylists-scrapper": "0.3.0",
-    "hidemyass-scrapper": "0.3.1",
+    "freeproxylists-scrapper": "0.3.2",
+    "hidemyass-scrapper": "0.3.7",
     "kairos": "^1.1.0",
     "phantom": "^0.8.3",
     "request": "^2.65.0",

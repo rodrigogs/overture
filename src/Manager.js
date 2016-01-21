@@ -1,5 +1,6 @@
 'use strict';
 
+const EventEmitter = require('events');
 const async = require('async');
 const winston = require('winston');
 const Kairos = require('kairos');
@@ -8,23 +9,25 @@ const FreeProxyLists = require('freeproxylists-scrapper');
 const Gateway = require('./Gateway');
 
 const STATUS = {
+    STARTED: 'started',
     READY: 'ready',
-    HALT: 'halt'
+    HALT: 'halt',
+    STOPPED: 'stopped'
 };
 
-module.exports = class Manager {
+module.exports = class Manager extends EventEmitter {
 
     /**
      * 
      * @param {string|object} logConfig Log level as string or a winston logger config as an object
      */
     constructor(logConfig) {
+        super();
         this._interval = null;
         this._statusInterval = null;
         this._status = undefined;
         this._isRunning = false;
         this._hatchery = require('./Hatchery');
-        this.events = new (require('events'))();
 
         this._logger = new winston.Logger();
         if (typeof logConfig === 'string') {
@@ -41,33 +44,47 @@ module.exports = class Manager {
      * Starts the crawler service.
      * 
      * @param {number} interval The verification interval in minutes
-     * @param {function} callback Callback
      */
-    start(interval, callback) {
+    start(interval) {
         if (this.isRunning) {
             return this._logger.log('info', 'Already running');
         }
 
-        this._interval = setInterval(() => {
+        const verify = () => {
             async.each([HideMyAss, FreeProxyLists], (provider, cb) => {
-                this.findGateways(provider, this._hatchery.incubate);
+                let options = {};
+                if (this.status === STATUS.READY) {
+                    let proxy = this.pickRandom();
+                    if (proxy) {
+                        proxy = proxy.url;
+                    }
+                    options.proxy = proxy;
+                }
+
+                this.findGateways(provider, options, this._hatchery.incubate);
                 cb();
             });
-        }, Kairos.with().setMinutes(interval || 1).toMilliseconds());
+        };
 
-        this._statusInterval = setInterval(() => {
+        const updateStatus = () => {
             let list = this.pickAll();
-            if (list && (list.length > 0) && (!this._status || (this._status === STATUS.HALT))) {
+            if (list && (list.length > 0) && (!this._status || (this._status !== STATUS.READY))) {
                 this._status = STATUS.READY;
-                this.events.emit(STATUS.READY, list);
+                this.emit(STATUS.READY, list);
             } else if (this._status === STATUS.READY) {
                 this._status === STATUS.HALT;
-                this.events.emit(STATUS.HALT);
+                this.emit(STATUS.HALT);
             }
-        }, 2000);
+        };
+
+        this._interval = setInterval(verify, Kairos.with().setMinutes(interval || 1).toMilliseconds());
+        this._statusInterval = setInterval(updateStatus, 10000);
+
+        verify();
 
         this._isRunning = true;
         this._logger.log('debug', 'Service started');
+        this.emit(STATUS.STARTED);
     }
 
     /**
@@ -81,14 +98,19 @@ module.exports = class Manager {
         clearInterval(this._statusInterval);
         this._running = false;
         this._logger.log('debug', 'Service stopped');
+        this.emit(STATUS.STOPPED);
     }
 
     /**
+     * Retrieve gateways from a provider.
      * 
+     * @param {module} provider A module that crawls a proxy list
+     * @param {object} options Current suports "proxy" option
+     * @param {function} callback Callback function to receive the proxy list
      */
-    findGateways(provider, callback) {
+    findGateways(provider, options, callback) {
         async.waterfall([
-            cb => provider.getPages({}, (err, pages) => {
+            cb => provider.getPages(options, (err, pages) => {
                 if (err) {
                     this._logger.log('error', err.message);
                     pages = 0;
@@ -96,8 +118,10 @@ module.exports = class Manager {
                 cb(null, pages);
             }),
 
-            (pages, cb) => async.timesLimit(++pages, 2, (page, next) => {
-                provider.crawl({page: page}, (err, gateways) => {
+            (pages, cb) => async.timesLimit(++pages, 3, (page, next) => {
+                options = options || {};
+                options.page = page;
+                provider.crawl(options, (err, gateways) => {
                     if (err) {
                         this._logger.log('error', err.message);
                         return next();
@@ -122,7 +146,9 @@ module.exports = class Manager {
     }
 
     /**
+     * Picks the best proxy found.
      * 
+     * @returns {Gateway}
      */
     pickBest() {
         if (!this.isRunning) {
@@ -131,11 +157,39 @@ module.exports = class Manager {
         return this._hatchery.pick();
     }
 
+    /**
+     * Picls a random healthy proxy server.
+     * 
+     * @returns {Gateway}
+     */
+    pickRandom() {
+        if (!this.isRunning) {
+            return null;
+        }
+        let list = this.pickAll();
+
+        return list[Math.floor(Math.random() * list.length)];
+    }
+
+    /**
+     * Picks a list with all healthy proxy servers found.
+     * 
+     * @returns {Gateway[]}
+     */
     pickAll() {
         if (!this.isRunning) {
             return null;
         }
-        return this._hatchery.list();
+        return this._hatchery.listHealthy();
+    }
+
+    /**
+     * Lists all the proxy servers that are being verified.
+     * 
+     * @returns {Gateway[]}
+     */
+    get list() {
+        return this._hatchery.listAll();
     }
 
     /**
@@ -148,9 +202,11 @@ module.exports = class Manager {
     }
 
     /**
-     * Lists the current verified gateways.
+     * Returns current service status.
+     * 
+     * @returns {string}
      */
-    get list() {
-        return this._hatchery.list().filter(gateway => gateway.isHealthy);
+    get status() {
+        return this._status;
     }
 };

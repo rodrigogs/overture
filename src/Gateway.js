@@ -2,12 +2,12 @@
 
 const url = require('url');
 const request = require('request');
-const TEST_URL = 'http://www.example.com';
+const TEST_URL = 'https://httpbin.org/get';
 
 module.exports = class Gateway {
     constructor(hostname, port, protocol, anonymity, country, region, city, uptime, provider) {
         let args = hostname || {};
-        
+
         this.hostname = args.hostname || hostname;
         this.port = args.port || port;
         this.protocol =  args.protocol || protocol;
@@ -36,10 +36,19 @@ module.exports = class Gateway {
     ping(callback) {
         let r = request.defaults({'proxy': this.url});
 
-        r.get(TEST_URL, {timeout: 10000, time: true}, (error, response) => {
+        r.get(TEST_URL, {timeout: 10000, time: true}, (error, response, body) => {
             if (!error && response.statusCode === 200) {
-                return callback(response.elapsedTime);
+                try {
+                    body = body ? JSON.parse(body) : null;
+                } catch (ex) {
+                    body = null;
+                } finally {
+                    if (body && body.url === TEST_URL) {
+                        return callback(response.elapsedTime);
+                    }
+                }
             }
+
             callback(false);
         });
     }
