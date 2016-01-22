@@ -41,6 +41,8 @@ let myProxy = overture.pickBest();
 // Returns a tested healthy proxy server with the lowest latency
 let myProxies = overture.pickAll();
 // Returns a list with all healthy gateways
+let myProxies = overture.pickRandom();
+// Returns a random healthy proxy
 let isRunning = overture.isRunning;
 // Returns true if instance is running and false if it's not
 let status = overture.status;
