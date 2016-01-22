@@ -2,7 +2,8 @@
 
 const url = require('url');
 const request = require('request');
-const TEST_URL = 'https://httpbin.org/get';
+const Agent = require('socks5-http-client/lib/Agent');
+const TEST_URL = 'http://httpbin.org/get';
 
 module.exports = class Gateway {
     constructor(hostname, port, protocol, anonymity, country, region, city, uptime, provider) {
@@ -34,7 +35,18 @@ module.exports = class Gateway {
     }
 
     ping(callback) {
-        let r = request.defaults({'proxy': this.url});
+        let r;
+        if (this.protocol && (this.protocol.indexOf('socks') > -1)) {
+            r = request.defaults({
+                agentClass: Agent,
+                agentOptions: {
+                    socksHost: this.hostname,
+                    socksPort: this.port
+                }
+            });
+        } else {
+            r = request.defaults({'proxy': this.url});
+        }
 
         r.get(TEST_URL, {timeout: 10000, time: true}, (error, response, body) => {
             if (!error && response.statusCode === 200) {

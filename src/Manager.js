@@ -27,6 +27,7 @@ module.exports = class Manager extends EventEmitter {
         this._statusInterval = null;
         this._status = undefined;
         this._isRunning = false;
+        this._server = undefined;
         this._hatchery = require('./Hatchery');
 
         this._logger = new winston.Logger();
@@ -54,7 +55,7 @@ module.exports = class Manager extends EventEmitter {
             async.each([HideMyAss, FreeProxyLists], (provider, cb) => {
                 let options = {};
                 if (this.status === STATUS.READY) {
-                    let proxy = this.pickRandom();
+                    let proxy = this.pickRandom(['http', 'https']);
                     if (proxy) {
                         proxy = proxy.url;
                     }
@@ -82,6 +83,10 @@ module.exports = class Manager extends EventEmitter {
 
         verify();
 
+        if (this._server) {
+            this._server.start();
+        }
+
         this._isRunning = true;
         this._logger.log('debug', 'Service started');
         this.emit(STATUS.STARTED);
@@ -93,6 +98,9 @@ module.exports = class Manager extends EventEmitter {
     stop() {
         if (!this._running) {
             this._logger.log('info', 'Already stopped');
+        }
+        if (this._server) {
+            this._server.stop();
         }
         clearInterval(this._interval);
         clearInterval(this._statusInterval);
@@ -148,25 +156,27 @@ module.exports = class Manager extends EventEmitter {
     /**
      * Picks the best proxy found.
      * 
+     * @param {string[]} protocols Protocol types in ['http', 'https', 'socks']. If undefined, return all.
      * @returns {Gateway}
      */
-    pickBest() {
+    pickBest(protocols) {
         if (!this.isRunning) {
             return null;
         }
-        return this._hatchery.pick();
+        return this._hatchery.pick(protocols);
     }
 
     /**
      * Picls a random healthy proxy server.
      * 
+     * @param {string[]} protocols Protocol types in ['http', 'https', 'socks']. If undefined, return all.
      * @returns {Gateway}
      */
-    pickRandom() {
+    pickRandom(protocols) {
         if (!this.isRunning) {
             return null;
         }
-        let list = this.pickAll();
+        let list = this.pickAll(protocols);
 
         return list[Math.floor(Math.random() * list.length)];
     }
@@ -174,13 +184,19 @@ module.exports = class Manager extends EventEmitter {
     /**
      * Picks a list with all healthy proxy servers found.
      * 
+     * @param {string[]} protocols Protocol types in ['http', 'https', 'socks']. If undefined, return all.
      * @returns {Gateway[]}
      */
-    pickAll() {
+    pickAll(protocols) {
         if (!this.isRunning) {
             return null;
         }
-        return this._hatchery.listHealthy();
+        return this._hatchery.listHealthy(protocols);
+    }
+
+    serve(host, port) {
+        this._server = require('./Server')(this, host, port);
+        this._server.start();
     }
 
     /**

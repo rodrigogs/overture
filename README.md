@@ -22,22 +22,33 @@ const Overture = require('overture');
 
 let overture = new Overture('degub');
 
-overture.start(intervalInMinutes);
-// Starts an Overture instance that verifies the proxy lists within the given interval.
+overture.start(2);
+// Starts an Overture instance that verifies the proxy lists within the given interval(in minutes).
+overture.stop();
+// Stops the Overture instance
+
+overture.serve('127.0.0.1', 3000);
+// Create a http server
+// http://127.0.0.1:3000/list, http://127.0.0.1:3000/all, http://127.0.0.1:3000/best, http://127.0.0.1:3000/random
 
 overture.on('ready', (currentHealthyList) => { console.log(currentHealthyList) } );
 overture.on('halt', () => { console.log('Sorry, there are no proxies alive :(') } );
 // Events
 
+let rawList = overture.list;
+// The current raw list
 let myProxy = overture.pickBest();
-// Returns a tested healthy proxy server with the lowest latency.
+// Returns a tested healthy proxy server with the lowest latency
 let myProxies = overture.pickAll();
-// Returns a list with all healthy gateways.
-overture.stop();
-// Stops the Overture instance.
+// Returns a list with all healthy gateways
 let isRunning = overture.isRunning;
-// Returns true if instance is running and false if it's not.
+// Returns true if instance is running and false if it's not
+let status = overture.status;
+// Returns the current instance status: [ started, ready, halt, stopped ]
 ```
+
+## TODO
+* Better documentation
 
 ## License
 

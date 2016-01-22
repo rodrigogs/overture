@@ -72,10 +72,16 @@ const _incubate = gateways => {
 };
 
 /**
- * Returns the gateway with the smallest latency
+ * Returns the gateway with the smallest latency.
+ * 
+ * @param {string[]} protocols Protocol types in ['http', 'https', 'socks']. If undefined, return all.
  */
-const _pick = () => {
-    let healthyList = _list.filter(gateway => {
+const _pick = (protocols) => {
+    let healthyList = protocols ? _list.filter(gateway => {
+        return protocols.indexOf(gateway.protocol) > -1;
+    }) : _list;
+
+    healthyList = healthyList.filter(gateway => {
         return gateway.isHealthy === true;
     });
 
@@ -89,9 +95,15 @@ const _pick = () => {
 
 /**
  * Returns a list with the healthy gateways.
+ * 
+ * @param {string[]} protocols Protocol types in ['http', 'https', 'socks']. If undefined, return all.
  */
-const _listHealthy = () => {
-    return _list.filter(gateway => {
+const _listHealthy = (protocols) => {
+    let filteredList = protocols ? _list.filter(gateway => {
+        return protocols.indexOf(gateway.protocol) > -1;
+    }) : _list;
+
+    return filteredList.filter(gateway => {
         return gateway.isHealthy === true;
     });
 };
