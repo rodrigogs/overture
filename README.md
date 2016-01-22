@@ -18,7 +18,7 @@ You can think of Overture as a proxy pool service.
 
 ## Usage
 ```javascript
-const Overture = require('overture');
+const Overture = require('overturejs');
 
 let overture = new Overture('degub');
 
